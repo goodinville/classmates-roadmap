@@ -805,38 +805,49 @@
 <!-- SETTINGS MODAL -->
 <div class="modal-overlay" id="settingsModal">
   <div class="modal" style="width:520px">
-    <div class="modal-title">☁ Supabase Sync</div>
+    <div class="modal-title">☁ Google Sheets Sync</div>
 
     <div style="background:var(--surface2);border-radius:8px;padding:14px 16px;margin-bottom:16px;font-size:12px;color:var(--text2);line-height:1.8">
       <strong style="color:var(--text);display:block;margin-bottom:6px">One-time setup:</strong>
-      1. Go to <strong>supabase.com</strong> → New project<br>
-      2. Once created, go to <strong>SQL Editor</strong> and run the setup SQL below<br>
-      3. Go to <strong>Integrations → Data API</strong> — copy the <em>API URL</em> and <em>Publishable key</em><br>
-      4. <strong>Host this HTML file</strong> on <a href="https://app.netlify.com/drop" target="_blank" style="color:var(--accent)">Netlify Drop</a> (drag &amp; drop — free)<br>
-      5. Open the hosted URL, paste credentials below and click Save
+      1. Open your Google Sheet → <strong>Extensions → Apps Script</strong><br>
+      2. Delete existing code, paste the script below, hit Save<br>
+      3. Click <strong>Deploy → New deployment</strong> → type: <em>Web app</em> → execute as: <em>Me</em> → access: <em>Anyone</em> → Deploy<br>
+      4. Authorize when prompted, then copy the <strong>Web app URL</strong><br>
+      5. Paste it below and click Save
     </div>
 
     <div class="field">
-      <label class="field-label">API URL</label>
-      <input type="text" id="supabaseUrl" placeholder="https://xxxxxxxxxxxx.supabase.co" style="font-size:12px">
-    </div>
-
-    <div class="field">
-      <label class="field-label">Publishable Key</label>
-      <input type="text" id="supabaseKey" placeholder="sb_publishable_..." style="font-size:12px">
+      <label class="field-label">Apps Script Web App URL</label>
+      <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/…/exec" style="font-size:12px">
     </div>
 
     <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px">
-      <label class="field-label" style="margin-bottom:8px;display:block">SQL Setup <span style="color:var(--text3)">(run once in Supabase SQL Editor)</span></label>
-      <textarea readonly onclick="this.select()" style="width:100%;height:100px;font-family:var(--mono);font-size:10.5px;background:#1a1d2e;color:#a8d8a8;border:1px solid var(--border2);border-radius:6px;padding:10px;resize:none;line-height:1.6">create table if not exists roadmap (
-  id text primary key default 'main',
-  data jsonb,
-  updated_at timestamptz default now()
-);
-insert into roadmap (id, data) values ('main', 'null'::jsonb)
-  on conflict (id) do nothing;
-alter table roadmap enable row level security;
-create policy "allow all" on roadmap for all using (true) with check (true);</textarea>
+      <label class="field-label" style="margin-bottom:8px;display:block">Apps Script Code <span style="color:var(--text3)">(paste into Extensions → Apps Script)</span></label>
+      <textarea readonly onclick="this.select()" style="width:100%;height:190px;font-family:var(--mono);font-size:10.5px;background:#1a1d2e;color:#a8d8a8;border:1px solid var(--border2);border-radius:6px;padding:10px;resize:none;line-height:1.6">const SHEET_NAME = "Roadmap";
+
+function doGet(e) {
+  const sheet = getOrCreateSheet();
+  const cb = e.parameter.callback;
+
+  if (e.parameter.action === "save") {
+    sheet.getRange("A1").setValue(e.parameter.data);
+    const out = JSON.stringify({ ok: true });
+    return ContentService
+      .createTextOutput(cb ? cb + "(" + out + ")" : out)
+      .setMimeType(cb ? ContentService.MimeType.JAVASCRIPT : ContentService.MimeType.JSON);
+  }
+
+  const val = sheet.getRange("A1").getValue();
+  const out = JSON.stringify({ ok: true, data: val ? JSON.parse(val) : null });
+  return ContentService
+    .createTextOutput(cb ? cb + "(" + out + ")" : out)
+    .setMimeType(cb ? ContentService.MimeType.JAVASCRIPT : ContentService.MimeType.JSON);
+}
+
+function getOrCreateSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  return ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+}</textarea>
     </div>
 
     <div class="modal-actions" style="margin-top:16px">
@@ -964,36 +975,18 @@ create policy "allow all" on roadmap for all using (true) with check (true);</te
 const STORAGE_KEY = 'cm_roadmap_2026_v3';
 const SETTINGS_KEY = 'cm_roadmap_settings';
 
-// ── SUPABASE SYNC (plain fetch — no SDK) ──────────────────────────────────────
-let settings = { supabaseUrl: '', supabaseKey: '' };
+// ── GOOGLE SHEETS SYNC ────────────────────────────────────────────────────────
+let settings = { scriptUrl: '' };
 let saveDebounceTimer = null;
 let pollTimer = null;
-let lastUpdatedAt = null;
 
 function loadSettings() {
   const saved = localStorage.getItem(SETTINGS_KEY);
   if (saved) try { settings = JSON.parse(saved); } catch(e) {}
 }
 
-function sbHeaders(method) {
-  const h = {
-    'apikey': settings.supabaseKey,
-    'Authorization': 'Bearer ' + settings.supabaseKey,
-    'Content-Type': 'application/json'
-  };
-  if (method === 'POST') {
-    h['Prefer'] = 'resolution=merge-duplicates,return=minimal';
-  }
-  return h;
-}
-
-function sbUrl(path) {
-  return settings.supabaseUrl.replace(/\/$/, '') + '/rest/v1/' + path;
-}
-
 function openSettings() {
-  document.getElementById('supabaseUrl').value = settings.supabaseUrl || '';
-  document.getElementById('supabaseKey').value = settings.supabaseKey || '';
+  document.getElementById('scriptUrl').value = settings.scriptUrl || '';
   document.getElementById('settingsModal').classList.add('open');
 }
 
@@ -1002,39 +995,32 @@ function closeSettings() {
 }
 
 async function saveSettings() {
-  settings.supabaseUrl = document.getElementById('supabaseUrl').value.trim().replace(/\/$/, '');
-  settings.supabaseKey = document.getElementById('supabaseKey').value.trim();
+  settings.scriptUrl = document.getElementById('scriptUrl').value.trim();
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   closeSettings();
   const ok = await syncLoad();
   if (ok) {
     startPolling();
-    toast('Connected to Supabase ✓', 'success');
+    toast('Connected to Google Sheets ✓', 'success');
   }
-  // If not ok, syncLoad already showed a toast with the error
 }
 
 async function testConnection() {
-  const url = document.getElementById('supabaseUrl').value.trim().replace(/\/$/, '');
-  const key = document.getElementById('supabaseKey').value.trim();
-  if (!url || !key) { toast('Enter both URL and key first'); return; }
+  const url = document.getElementById('scriptUrl').value.trim();
+  if (!url) { toast('Paste your Web App URL first'); return; }
   const btn = document.getElementById('testBtn');
   btn.textContent = 'Testing…';
   btn.disabled = true;
-  const testUrl = url + '/rest/v1/roadmap?id=eq.main&select=id';
-  console.log('[Test] Fetching:', testUrl);
   try {
-    const res = await fetch(testUrl, {
-      headers: { 'apikey': key, 'Authorization': 'Bearer ' + key }
-    });
-    const txt = await res.text();
-    console.log('[Test] Status:', res.status, 'Body:', txt);
-    if (!res.ok) throw new Error('HTTP ' + res.status + ': ' + txt.slice(0, 100));
-    toast('✓ Connection successful!', 'success');
+    const json = await jsonp(url + '?action=load');
+    if (json.ok !== undefined) {
+      toast('✓ Connection successful!', 'success');
+    } else {
+      throw new Error('Unexpected response');
+    }
   } catch(e) {
-    const msg = e.message.includes('fetch') ? 'Network error — is the URL correct?' : e.message;
-    toast('Failed: ' + msg);
-    console.error('[Test] Error:', e);
+    toast('Failed: ' + e.message + ' — check the URL and redeploy');
+    console.error(e);
   }
   btn.textContent = 'Test Connection';
   btn.disabled = false;
@@ -1048,26 +1034,18 @@ function setSyncStatus(state, label) {
 }
 
 function debouncedSyncSave(data) {
-  if (!settings.supabaseUrl) return;
+  if (!settings.scriptUrl) return;
   clearTimeout(saveDebounceTimer);
   saveDebounceTimer = setTimeout(() => syncSave(data), 1500);
 }
 
 async function syncSave(data) {
-  if (!settings.supabaseUrl) return;
+  if (!settings.scriptUrl) return;
   setSyncStatus('saving', 'Saving…');
   try {
-    const cleanData = JSON.parse(JSON.stringify(data));
-    const body = JSON.stringify({ id: 'main', data: cleanData, updated_at: new Date().toISOString() });
-    const res = await fetch(sbUrl('roadmap'), {
-      method: 'POST',
-      headers: sbHeaders('POST'),
-      body
-    });
-    if (!res.ok) {
-      const txt = await res.text();
-      throw new Error(res.status + ': ' + txt);
-    }
+    const encoded = encodeURIComponent(JSON.stringify(JSON.parse(JSON.stringify(data))));
+    // Use JSONP for save too so it works cross-origin
+    await jsonp(settings.scriptUrl + '?action=save&data=' + encoded);
     setSyncStatus('ok', 'Synced ✓');
   } catch(e) {
     setSyncStatus('error', 'Save failed');
@@ -1075,60 +1053,66 @@ async function syncSave(data) {
   }
 }
 
+function jsonp(url) {
+  return new Promise((resolve, reject) => {
+    const cbName = '_cb_' + Math.random().toString(36).substr(2, 8);
+    const script = document.createElement('script');
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error('Timeout'));
+    }, 10000);
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    }
+    window[cbName] = (data) => { cleanup(); resolve(data); };
+    script.onerror = () => { cleanup(); reject(new Error('Script load error')); };
+    script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cbName + '&t=' + Date.now();
+    document.head.appendChild(script);
+  });
+}
+
 async function syncLoad() {
-  if (!settings.supabaseUrl) return false;
+  if (!settings.scriptUrl) return false;
   setSyncStatus('saving', 'Loading…');
   try {
-    const url = sbUrl('roadmap?id=eq.main&select=data,updated_at');
-    console.log('[Sync] Loading from:', url);
-    const res = await fetch(url, { headers: sbHeaders() });
-    console.log('[Sync] Response status:', res.status);
-    if (!res.ok) {
-      const txt = await res.text();
-      console.error('[Sync] Error body:', txt);
-      throw new Error('HTTP ' + res.status + ' — ' + txt.slice(0, 120));
-    }
-    const rows = await res.json();
-    console.log('[Sync] Rows returned:', rows.length);
-    if (rows.length && rows[0].data) {
-      lastUpdatedAt = rows[0].updated_at || null;
-      roadmapData = rows[0].data;
+    const json = await jsonp(settings.scriptUrl + '?action=load');
+    if (json.data) {
+      roadmapData = json.data;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(roadmapData));
       render();
     }
     setSyncStatus('ok', 'Synced ✓');
     return true;
   } catch(e) {
-    const msg = e.message || 'Network error — check browser console for details';
     setSyncStatus('error', 'Load failed');
-    toast('Sync error: ' + msg);
-    console.error('[Sync] Load failed:', e);
+    toast('Connection failed: ' + e.message);
+    console.error('Sync load failed:', e);
     return false;
   }
 }
 
 function startPolling() {
   if (pollTimer) clearInterval(pollTimer);
-  if (!settings.supabaseUrl) return;
+  if (!settings.scriptUrl) return;
   pollTimer = setInterval(async () => {
     if (saveDebounceTimer) return;
     try {
-      const res = await fetch(sbUrl('roadmap?id=eq.main&select=data,updated_at'), {
-        headers: sbHeaders()
-      });
-      if (!res.ok) return;
-      const rows = await res.json();
-      if (!rows.length || !rows[0].data) return;
-      if (rows[0].updated_at && rows[0].updated_at !== lastUpdatedAt) {
-        lastUpdatedAt = rows[0].updated_at;
-        roadmapData = rows[0].data;
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(roadmapData));
-        render();
-        setSyncStatus('ok', 'Updated ✓');
-        setTimeout(() => setSyncStatus('ok', 'Synced ✓'), 2000);
+      const json = await jsonp(settings.scriptUrl + '?action=load');
+      if (json.data) {
+        const incoming = JSON.stringify(json.data);
+        const current = JSON.stringify(roadmapData);
+        if (incoming !== current) {
+          roadmapData = json.data;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(roadmapData));
+          render();
+          setSyncStatus('ok', 'Updated ✓');
+          setTimeout(() => setSyncStatus('ok', 'Synced ✓'), 2000);
+        }
       }
     } catch(e) { console.error('Poll failed:', e); }
-  }, 15000);
+  }, 30000);
 }
 
 let roadmapData = {
@@ -2326,7 +2310,7 @@ loadSettings();
 load();
 render();
 
-if (settings.supabaseUrl && settings.supabaseKey) {
+if (settings.scriptUrl) {
   syncLoad();
   startPolling();
 } else {
