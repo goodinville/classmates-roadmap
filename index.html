@@ -1,0 +1,2341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classmates 2026 Roadmap</title>
+<style>
+  /* Using Calibri system font */
+
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #eceef3;
+    --surface: #ffffff;
+    --surface2: #f3f4f8;
+    --col-bg: #f6f7fb;
+    --border: #e2e5ed;
+    --border2: #cdd1de;
+    --text: #0f1221;
+    --text2: #454d66;
+    --text3: #8890ab;
+    --accent: #3a6aee;
+    --accent2: #6c42e8;
+    --green: #1a9e6a;
+    --orange: #d4870a;
+    --red: #d93240;
+    --yellow: #b89200;
+    --radius: 8px;
+    --card-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 3px 10px rgba(0,0,0,0.06);
+    --card-shadow-hover: 0 2px 6px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.08);
+    --mono: 'DM Mono', 'Menlo', monospace;
+    --sans: 'DM Sans', 'Calibri', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: auto;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: var(--mono);
+  }
+
+  .header-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .header-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border2);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--border2);
+    color: var(--text2);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); background: rgba(79,124,255,0.08); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: #3a6aee; }
+
+  .btn-edit-active {
+    background: rgba(245,166,35,0.15);
+    border-color: var(--orange);
+    color: var(--orange);
+  }
+
+  .btn-danger { background: rgba(245,65,79,0.15); border-color: var(--red); color: var(--red); }
+  .btn-danger:hover { background: rgba(245,65,79,0.25); }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    padding: 8px 24px;
+    background: var(--surface);
+    border-bottom: none;
+    gap: 12px;
+    box-shadow: 0 1px 0 var(--border);
+  }
+
+  .toolbar-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+
+  .tag-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    font-family: var(--mono);
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tag-filter:hover, .tag-filter.active { border-color: var(--accent); color: var(--accent); background: rgba(79,124,255,0.08); }
+
+  .tag-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+
+  /* ── MAIN CANVAS ── */
+  .canvas {
+    padding: 24px;
+    min-width: max-content;
+  }
+
+  /* ── LAYER ── */
+  .layer {
+    margin-bottom: 20px;
+  }
+
+  .layer-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .layer-chevron {
+    font-size: 10px;
+    color: var(--text3);
+    transition: transform 0.2s;
+    width: 12px;
+  }
+  .layer-chevron.open { transform: rotate(90deg); }
+
+  .layer-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 3px;
+  }
+  .badge-consumer { background: rgba(79,124,255,0.2); color: var(--accent); border: 1px solid rgba(79,124,255,0.3); }
+  .badge-platform { background: rgba(124,92,252,0.2); color: var(--accent2); border: 1px solid rgba(124,92,252,0.3); }
+  .badge-backend  { background: rgba(62,207,142,0.2); color: var(--green); border: 1px solid rgba(62,207,142,0.3); }
+  .badge-data     { background: rgba(245,166,35,0.2); color: var(--orange); border: 1px solid rgba(245,166,35,0.3); }
+
+  .layer-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0a0e1f;
+    letter-spacing: -0.01em;
+  }
+
+  .layer-body {
+    display: flex;
+    gap: 12px;
+  }
+
+  /* ── QUARTER ── */
+  .quarter {
+    display: flex;
+    flex-direction: column;
+    min-width: 720px;
+    flex: 1;
+  }
+
+  .quarter-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .quarter-label {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e2440;
+    letter-spacing: 0.04em;
+  }
+
+  .quarter-date {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .quarter-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    opacity: 0.5;
+  }
+
+  .quarter-body {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* ── MONTH ── */
+  .month {
+    flex: none;
+    width: 240px;
+    min-width: 140px;
+    background: #f3f4f9;
+    border-radius: 10px;
+    border: none;
+    overflow: hidden;
+  }
+
+
+  .month-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #e4e7f0;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .month-name {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 700;
+    color: #1e2440;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    flex: 1;
+  }
+
+  .month-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+  }
+
+  .month-body { padding: 10px; }
+
+  /* ── SPRINT ── */
+  .sprint {
+    margin-bottom: 8px;
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.55);
+  }
+
+  .sprint-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    background: rgba(220,224,236,0.7);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .sprint-name {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    color: #2c3454;
+    letter-spacing: 0.04em;
+    flex: 1;
+  }
+
+  .sprint-count {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text3);
+  }
+
+  .sprint-body {
+    padding: 8px;
+    min-height: 32px;
+    transition: background 0.15s;
+  }
+
+  .sprint-body.drag-over {
+    background: rgba(79,124,255,0.08);
+    border-color: var(--accent);
+    outline: 1px dashed var(--accent);
+    border-radius: 4px;
+  }
+
+  /* ── ITEM ── */
+  .item {
+    background: #ffffff;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.18s, transform 0.12s;
+    position: relative;
+  }
+
+  .item:last-child { margin-bottom: 0; }
+
+  .item:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  .item.dragging {
+    opacity: 0.4;
+    cursor: grabbing;
+  }
+
+  .item-title {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #0f1221;
+    line-height: 1.35;
+    margin-bottom: 3px;
+  }
+
+  .item-detail {
+    font-size: 11px;
+    color: #5a6278;
+    line-height: 1.5;
+  }
+  .item-detail-rich ul, .item-detail-rich ol {
+    padding-left: 16px;
+    margin: 2px 0;
+  }
+  .item-detail-rich li { margin: 1px 0; }
+  .item-detail-rich p { margin: 1px 0; }
+
+  .item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .tag-Priority   { background: rgba(245,65,79,0.2);   color: var(--red);    border: 1px solid rgba(245,65,79,0.3); }
+  .tag-Feeds      { background: rgba(79,124,255,0.2);  color: var(--accent); border: 1px solid rgba(79,124,255,0.3); }
+  .tag-Mobile     { background: rgba(124,92,252,0.2);  color: var(--accent2);border: 1px solid rgba(124,92,252,0.3); }
+  .tag-Monetize   { background: rgba(62,207,142,0.2);  color: var(--green);  border: 1px solid rgba(62,207,142,0.3); }
+  .tag-Backend    { background: rgba(245,166,35,0.2);  color: var(--orange); border: 1px solid rgba(245,166,35,0.3); }
+  .tag-Design     { background: rgba(255,210,52,0.2);  color: var(--yellow); border: 1px solid rgba(255,210,52,0.3); }
+  .tag-Analytics  { background: rgba(62,207,142,0.15); color: var(--green);  border: 1px solid rgba(62,207,142,0.2); }
+  .tag-Bug        { background: rgba(217,50,64,0.12);   color: var(--red);    border: 1px solid rgba(217,50,64,0.25); }
+  .tag-default    { background: var(--surface);        color: var(--text2);  border: 1px solid var(--border2); }
+
+  /* edit mode item actions */
+  .item-actions {
+    display: none;
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    gap: 4px;
+  }
+  .edit-mode .item-actions { display: flex; }
+
+  .item-action-btn {
+    width: 20px; height: 20px;
+    border-radius: 3px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text2);
+    font-size: 10px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.1s;
+  }
+  .item-action-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .item-action-btn.delete:hover { border-color: var(--red); color: var(--red); }
+
+  /* add item btn */
+  .add-item-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    padding: 7px 6px;
+    background: transparent;
+    border: 1.5px dashed var(--border2);
+    border-radius: 6px;
+    color: var(--text3);
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 6px;
+  }
+  .add-item-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(58,106,238,0.04); }
+
+  /* add sprint/month/layer btns */
+  .add-sprint-btn, .add-month-btn, .add-layer-btn {
+    display: none;
+  }
+  .edit-mode .add-sprint-btn,
+  .edit-mode .add-month-btn,
+  .edit-mode .add-layer-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    background: transparent;
+    border: 1px dashed var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 6px;
+    border-radius: 6px;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .edit-mode .add-sprint-btn:hover,
+  .edit-mode .add-month-btn:hover,
+  .edit-mode .add-layer-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .add-layer-btn {
+    margin-top: 12px;
+    padding: 12px;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 24px;
+    width: 580px;
+    max-width: 95vw;
+  }
+
+  .modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .field input, .field textarea, .field select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 180px; font-size: 13px; line-height: 1.6; }
+
+
+  /* ── RICH EDITOR ── */
+  .rich-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 5px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-bottom: none;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  .rich-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 27px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 12px;
+    font-family: var(--sans);
+    transition: background 0.12s, color 0.12s;
+  }
+  .rich-btn:hover { background: var(--border); color: var(--text); }
+  .rich-btn.rich-italic { font-style: italic; }
+
+  .rich-sep {
+    width: 1px;
+    height: 18px;
+    background: var(--border2);
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
+
+  .rich-editor {
+    width: 100%;
+    min-height: 200px;
+    max-height: 360px;
+    overflow-y: auto;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 0 0 var(--radius) var(--radius);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.65;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .rich-editor:focus { border-color: var(--accent); }
+
+  .rich-editor[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--text3);
+    pointer-events: none;
+  }
+
+  .rich-editor ul, .rich-editor ol {
+    padding-left: 20px;
+    margin: 4px 0;
+  }
+  .rich-editor li { margin: 2px 0; }
+  .rich-editor p { margin: 3px 0; }
+
+  .tag-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag-checkbox {
+    display: none;
+  }
+
+  .tag-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    font-family: var(--mono);
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .tag-checkbox:checked + .tag-checkbox-label { border-color: var(--accent); color: var(--accent); background: rgba(79,124,255,0.1); }
+
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; align-items: center; }
+
+  /* Chevrons */
+  .chevron { transition: transform 0.2s; display: inline-block; }
+  .collapsed .chevron { transform: rotate(-90deg); }
+
+  /* ── EMPTY STATE ── */
+  .empty-hint {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    text-align: center;
+    padding: 12px 4px;
+    display: none;
+  }
+  .edit-mode .empty-hint { display: block; }
+
+  /* drop indicator */
+  .drop-indicator {
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+    margin: 2px 0;
+    pointer-events: none;
+    position: relative;
+  }
+  .drop-indicator::before {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: -3px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* Notifications */
+  /* Sync status */
+  .sync-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .sync-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .sync-idle   { background: var(--surface2); color: var(--text3); }
+  .sync-idle .sync-dot { background: var(--text3); }
+
+  .sync-ok     { background: rgba(26,158,106,0.12); color: var(--green); }
+  .sync-ok .sync-dot { background: var(--green); }
+
+  .sync-saving { background: rgba(58,106,238,0.1); color: var(--accent); }
+  .sync-saving .sync-dot { background: var(--accent); animation: pulse 0.8s infinite; }
+
+  .sync-error  { background: rgba(217,50,64,0.1); color: var(--red); }
+  .sync-error .sync-dot { background: var(--red); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text);
+    z-index: 300;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.25s;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-color: var(--green); color: var(--green); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <span class="logo">Classmates</span>
+    <div class="header-divider"></div>
+    <span class="header-title">2026 Product Roadmap</span>
+  </div>
+  <div class="header-actions">
+    <div id="syncStatus" class="sync-status sync-idle" title="Sync status">
+      <span class="sync-dot"></span>
+      <span class="sync-label">Local</span>
+    </div>
+    <button class="btn btn-ghost" onclick="collapseAll()">⊟ Collapse All</button>
+    <button class="btn btn-ghost" onclick="expandAll()">⊞ Expand All</button>
+    <button class="btn btn-primary" onclick="exportCSV()">↓ Export CSV</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">↑ Import</button>
+    <input type="file" id="importFile" accept=".json,.csv" style="display:none" onchange="importFile(event)">
+    <button class="btn btn-ghost" onclick="openSettings()">⚙ Sync</button>
+    <button class="btn btn-ghost btn-edit-active" id="editBtn" onclick="toggleEditMode()">✎ Edit Mode</button>
+  </div>
+</div>
+
+
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <span class="toolbar-label">Filter</span>
+  <button class="tag-filter active" onclick="filterTag('all', this)"><span class="tag-dot" style="background:var(--text2)"></span>All</button>
+  <button class="tag-filter" onclick="filterTag('Priority', this)"><span class="tag-dot" style="background:var(--red)"></span>Priority</button>
+  <button class="tag-filter" onclick="filterTag('Feeds', this)"><span class="tag-dot" style="background:var(--accent)"></span>Feeds</button>
+  <button class="tag-filter" onclick="filterTag('Mobile', this)"><span class="tag-dot" style="background:var(--accent2)"></span>Mobile</button>
+  <button class="tag-filter" onclick="filterTag('Monetize', this)"><span class="tag-dot" style="background:var(--green)"></span>Monetize</button>
+  <button class="tag-filter" onclick="filterTag('Backend', this)"><span class="tag-dot" style="background:var(--orange)"></span>Backend</button>
+  <button class="tag-filter" onclick="filterTag('Analytics', this)"><span class="tag-dot" style="background:var(--green)"></span>Analytics</button>
+  <button class="tag-filter" onclick="filterTag('Bug', this)"><span class="tag-dot" style="background:var(--red)"></span>Bug</button>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+    <span class="toolbar-label">Column Width</span>
+    <input type="range" id="colWidthSlider" min="160" max="480" value="240"
+      style="width:100px;accent-color:var(--accent);cursor:pointer"
+      oninput="setAllMonthWidths(this.value)">
+    <span class="toolbar-label" id="colWidthLabel">240px</span>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal" style="width:520px">
+    <div class="modal-title">☁ Supabase Sync</div>
+
+    <div style="background:var(--surface2);border-radius:8px;padding:14px 16px;margin-bottom:16px;font-size:12px;color:var(--text2);line-height:1.8">
+      <strong style="color:var(--text);display:block;margin-bottom:6px">One-time setup:</strong>
+      1. Go to <strong>supabase.com</strong> → New project<br>
+      2. Once created, go to <strong>SQL Editor</strong> and run the setup SQL below<br>
+      3. Go to <strong>Integrations → Data API</strong> — copy the <em>API URL</em> and <em>Publishable key</em><br>
+      4. <strong>Host this HTML file</strong> on <a href="https://app.netlify.com/drop" target="_blank" style="color:var(--accent)">Netlify Drop</a> (drag &amp; drop — free)<br>
+      5. Open the hosted URL, paste credentials below and click Save
+    </div>
+
+    <div class="field">
+      <label class="field-label">API URL</label>
+      <input type="text" id="supabaseUrl" placeholder="https://xxxxxxxxxxxx.supabase.co" style="font-size:12px">
+    </div>
+
+    <div class="field">
+      <label class="field-label">Publishable Key</label>
+      <input type="text" id="supabaseKey" placeholder="sb_publishable_..." style="font-size:12px">
+    </div>
+
+    <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px">
+      <label class="field-label" style="margin-bottom:8px;display:block">SQL Setup <span style="color:var(--text3)">(run once in Supabase SQL Editor)</span></label>
+      <textarea readonly onclick="this.select()" style="width:100%;height:100px;font-family:var(--mono);font-size:10.5px;background:#1a1d2e;color:#a8d8a8;border:1px solid var(--border2);border-radius:6px;padding:10px;resize:none;line-height:1.6">create table if not exists roadmap (
+  id text primary key default 'main',
+  data jsonb,
+  updated_at timestamptz default now()
+);
+insert into roadmap (id, data) values ('main', 'null'::jsonb)
+  on conflict (id) do nothing;
+alter table roadmap enable row level security;
+create policy "allow all" on roadmap for all using (true) with check (true);</textarea>
+    </div>
+
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn btn-ghost" onclick="testConnection()" id="testBtn">Test Connection</button>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <button class="btn btn-ghost" onclick="closeSettings()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CANVAS -->
+<div class="canvas" id="canvas"></div>
+
+<!-- ITEM MODAL -->
+<div class="modal-overlay" id="itemModal">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Add Item</div>
+    <div class="field">
+      <label class="field-label">Title</label>
+      <input type="text" id="itemTitle" placeholder="Feature or milestone name">
+    </div>
+    <div class="field">
+      <label class="field-label">Notes</label>
+      <div class="rich-toolbar">
+        <button type="button" class="rich-btn" title="Bullet list" onclick="richCmd('insertUnorderedList')">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><circle cx="1.5" cy="2.5" r="1.5"/><rect x="4" y="1.5" width="10" height="2" rx="1"/><circle cx="1.5" cy="7" r="1.5"/><rect x="4" y="6" width="10" height="2" rx="1"/><circle cx="1.5" cy="11.5" r="1.5"/><rect x="4" y="10.5" width="10" height="2" rx="1"/></svg>
+        </button>
+        <button type="button" class="rich-btn" title="Numbered list" onclick="richCmd('insertOrderedList')">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><text x="0" y="4.5" font-size="4.5" font-family="sans-serif">1.</text><rect x="4" y="1.5" width="10" height="2" rx="1"/><text x="0" y="9" font-size="4.5" font-family="sans-serif">2.</text><rect x="4" y="6" width="10" height="2" rx="1"/><text x="0" y="13.5" font-size="4.5" font-family="sans-serif">3.</text><rect x="4" y="10.5" width="10" height="2" rx="1"/></svg>
+        </button>
+        <span class="rich-sep"></span>
+        <button type="button" class="rich-btn" title="Bold" onclick="richCmd('bold')"><b>B</b></button>
+        <button type="button" class="rich-btn rich-italic" title="Italic" onclick="richCmd('italic')"><i>I</i></button>
+        <span class="rich-sep"></span>
+        <button type="button" class="rich-btn" title="Indent" onclick="richCmd('indent')">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="1" y1="2" x2="13" y2="2"/><line x1="5" y1="5.5" x2="13" y2="5.5"/><line x1="5" y1="9" x2="13" y2="9"/><line x1="1" y1="12.5" x2="13" y2="12.5"/><polyline points="1,5 3,7 1,9" fill="none"/></svg>
+        </button>
+        <button type="button" class="rich-btn" title="Outdent" onclick="richCmd('outdent')">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="1" y1="2" x2="13" y2="2"/><line x1="5" y1="5.5" x2="13" y2="5.5"/><line x1="5" y1="9" x2="13" y2="9"/><line x1="1" y1="12.5" x2="13" y2="12.5"/><polyline points="4,5 2,7 4,9" fill="none"/></svg>
+        </button>
+        <span class="rich-sep"></span>
+        <button type="button" class="rich-btn rich-clear" title="Clear formatting" onclick="richCmd('removeFormat')">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M4 12l3-10 3 10"/><line x1="5.5" y1="8" x2="9.5" y2="8"/><line x1="2" y1="12" x2="12" y2="12"/></svg>
+        </button>
+      </div>
+      <div id="itemDetail"
+           class="rich-editor"
+           contenteditable="true"
+           spellcheck="true"
+           data-placeholder="Add notes, bullet points, acceptance criteria..."></div>
+    </div>
+    <div class="field">
+      <label class="field-label">Tags</label>
+      <div class="tag-checkboxes">
+        <input type="checkbox" class="tag-checkbox" id="tag-Priority" value="Priority">
+        <label class="tag-checkbox-label" for="tag-Priority">🔴 Priority</label>
+        <input type="checkbox" class="tag-checkbox" id="tag-Feeds" value="Feeds">
+        <label class="tag-checkbox-label" for="tag-Feeds">📡 Feeds</label>
+        <input type="checkbox" class="tag-checkbox" id="tag-Mobile" value="Mobile">
+        <label class="tag-checkbox-label" for="tag-Mobile">📱 Mobile</label>
+        <input type="checkbox" class="tag-checkbox" id="tag-Monetize" value="Monetize">
+        <label class="tag-checkbox-label" for="tag-Monetize">💰 Monetize</label>
+        <input type="checkbox" class="tag-checkbox" id="tag-Backend" value="Backend">
+        <label class="tag-checkbox-label" for="tag-Backend">⚙️ Backend</label>
+        <input type="checkbox" class="tag-checkbox" id="tag-Design" value="Design">
+        <label class="tag-checkbox-label" for="tag-Design">🎨 Design</label>
+        <input type="checkbox" class="tag-checkbox" id="tag-Analytics" value="Analytics">
+        <label class="tag-checkbox-label" for="tag-Analytics">📊 Analytics</label>
+        <input type="checkbox" class="tag-checkbox" id="tag-Bug" value="Bug">
+        <label class="tag-checkbox-label" for="tag-Bug">🐛 Bug</label>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="modalDeleteBtn" onclick="deleteItemFromModal()" style="display:none;margin-right:auto">Delete</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveItem()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- LAYER MODAL -->
+<div class="modal-overlay" id="layerModal">
+  <div class="modal">
+    <div class="modal-title" id="layerModalTitle">Add Layer</div>
+    <div class="field">
+      <label class="field-label">Layer Name</label>
+      <input type="text" id="layerName" placeholder="e.g. Mobile App, Web Platform">
+    </div>
+    <div class="field">
+      <label class="field-label">Type</label>
+      <select id="layerType">
+        <option value="consumer">Consumer</option>
+        <option value="platform">Platform</option>
+        <option value="backend">Backend</option>
+        <option value="data">Data</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeLayerModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveLayer()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- CSV EXPORT MODAL -->
+<div class="modal-overlay" id="csvModal">
+  <div class="modal" style="width:600px">
+    <div class="modal-title">Export CSV</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:12px">Copy the text below and paste into a .csv file, or click Download.</p>
+    <textarea id="csvOutput" style="width:100%;height:220px;font-family:var(--mono);font-size:11px;background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius);padding:10px;color:var(--text);resize:vertical" readonly></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="document.getElementById('csvModal').classList.remove('open')">Close</button>
+      <button class="btn btn-ghost" onclick="copyCSV()">⎘ Copy</button>
+      <button class="btn btn-primary" onclick="downloadCSV()">↓ Download</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'cm_roadmap_2026_v3';
+const SETTINGS_KEY = 'cm_roadmap_settings';
+
+// ── SUPABASE SYNC (plain fetch — no SDK) ──────────────────────────────────────
+let settings = { supabaseUrl: '', supabaseKey: '' };
+let saveDebounceTimer = null;
+let pollTimer = null;
+let lastUpdatedAt = null;
+
+function loadSettings() {
+  const saved = localStorage.getItem(SETTINGS_KEY);
+  if (saved) try { settings = JSON.parse(saved); } catch(e) {}
+}
+
+function sbHeaders(method) {
+  const h = {
+    'apikey': settings.supabaseKey,
+    'Authorization': 'Bearer ' + settings.supabaseKey,
+    'Content-Type': 'application/json'
+  };
+  if (method === 'POST') {
+    h['Prefer'] = 'resolution=merge-duplicates,return=minimal';
+  }
+  return h;
+}
+
+function sbUrl(path) {
+  return settings.supabaseUrl.replace(/\/$/, '') + '/rest/v1/' + path;
+}
+
+function openSettings() {
+  document.getElementById('supabaseUrl').value = settings.supabaseUrl || '';
+  document.getElementById('supabaseKey').value = settings.supabaseKey || '';
+  document.getElementById('settingsModal').classList.add('open');
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('open');
+}
+
+async function saveSettings() {
+  settings.supabaseUrl = document.getElementById('supabaseUrl').value.trim().replace(/\/$/, '');
+  settings.supabaseKey = document.getElementById('supabaseKey').value.trim();
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  closeSettings();
+  const ok = await syncLoad();
+  if (ok) {
+    startPolling();
+    toast('Connected to Supabase ✓', 'success');
+  }
+  // If not ok, syncLoad already showed a toast with the error
+}
+
+async function testConnection() {
+  const url = document.getElementById('supabaseUrl').value.trim().replace(/\/$/, '');
+  const key = document.getElementById('supabaseKey').value.trim();
+  if (!url || !key) { toast('Enter both URL and key first'); return; }
+  const btn = document.getElementById('testBtn');
+  btn.textContent = 'Testing…';
+  btn.disabled = true;
+  const testUrl = url + '/rest/v1/roadmap?id=eq.main&select=id';
+  console.log('[Test] Fetching:', testUrl);
+  try {
+    const res = await fetch(testUrl, {
+      headers: { 'apikey': key, 'Authorization': 'Bearer ' + key }
+    });
+    const txt = await res.text();
+    console.log('[Test] Status:', res.status, 'Body:', txt);
+    if (!res.ok) throw new Error('HTTP ' + res.status + ': ' + txt.slice(0, 100));
+    toast('✓ Connection successful!', 'success');
+  } catch(e) {
+    const msg = e.message.includes('fetch') ? 'Network error — is the URL correct?' : e.message;
+    toast('Failed: ' + msg);
+    console.error('[Test] Error:', e);
+  }
+  btn.textContent = 'Test Connection';
+  btn.disabled = false;
+}
+
+function setSyncStatus(state, label) {
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  el.className = 'sync-status sync-' + state;
+  el.querySelector('.sync-label').textContent = label;
+}
+
+function debouncedSyncSave(data) {
+  if (!settings.supabaseUrl) return;
+  clearTimeout(saveDebounceTimer);
+  saveDebounceTimer = setTimeout(() => syncSave(data), 1500);
+}
+
+async function syncSave(data) {
+  if (!settings.supabaseUrl) return;
+  setSyncStatus('saving', 'Saving…');
+  try {
+    const cleanData = JSON.parse(JSON.stringify(data));
+    const body = JSON.stringify({ id: 'main', data: cleanData, updated_at: new Date().toISOString() });
+    const res = await fetch(sbUrl('roadmap'), {
+      method: 'POST',
+      headers: sbHeaders('POST'),
+      body
+    });
+    if (!res.ok) {
+      const txt = await res.text();
+      throw new Error(res.status + ': ' + txt);
+    }
+    setSyncStatus('ok', 'Synced ✓');
+  } catch(e) {
+    setSyncStatus('error', 'Save failed');
+    console.error('Sync save failed:', e);
+  }
+}
+
+async function syncLoad() {
+  if (!settings.supabaseUrl) return false;
+  setSyncStatus('saving', 'Loading…');
+  try {
+    const url = sbUrl('roadmap?id=eq.main&select=data,updated_at');
+    console.log('[Sync] Loading from:', url);
+    const res = await fetch(url, { headers: sbHeaders() });
+    console.log('[Sync] Response status:', res.status);
+    if (!res.ok) {
+      const txt = await res.text();
+      console.error('[Sync] Error body:', txt);
+      throw new Error('HTTP ' + res.status + ' — ' + txt.slice(0, 120));
+    }
+    const rows = await res.json();
+    console.log('[Sync] Rows returned:', rows.length);
+    if (rows.length && rows[0].data) {
+      lastUpdatedAt = rows[0].updated_at || null;
+      roadmapData = rows[0].data;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(roadmapData));
+      render();
+    }
+    setSyncStatus('ok', 'Synced ✓');
+    return true;
+  } catch(e) {
+    const msg = e.message || 'Network error — check browser console for details';
+    setSyncStatus('error', 'Load failed');
+    toast('Sync error: ' + msg);
+    console.error('[Sync] Load failed:', e);
+    return false;
+  }
+}
+
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  if (!settings.supabaseUrl) return;
+  pollTimer = setInterval(async () => {
+    if (saveDebounceTimer) return;
+    try {
+      const res = await fetch(sbUrl('roadmap?id=eq.main&select=data,updated_at'), {
+        headers: sbHeaders()
+      });
+      if (!res.ok) return;
+      const rows = await res.json();
+      if (!rows.length || !rows[0].data) return;
+      if (rows[0].updated_at && rows[0].updated_at !== lastUpdatedAt) {
+        lastUpdatedAt = rows[0].updated_at;
+        roadmapData = rows[0].data;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(roadmapData));
+        render();
+        setSyncStatus('ok', 'Updated ✓');
+        setTimeout(() => setSyncStatus('ok', 'Synced ✓'), 2000);
+      }
+    } catch(e) { console.error('Poll failed:', e); }
+  }, 15000);
+}
+
+let roadmapData = {
+  layers: [
+    {
+      id: 'mobile-app',
+      name: 'Mobile App',
+      type: 'consumer',
+      collapsed: false,
+      quarters: [
+        {
+          id: 'q1-2026',
+          name: 'Q1 2026',
+          dateRange: 'Jan – Mar 2026',
+          collapsed: false,
+          months: [
+            {
+              id: 'jan',
+              name: 'January',
+              collapsed: false,
+              sprints: [
+                {
+                  id: 'sp-m-jan-1',
+                  name: 'Sprint 23 (Dec 30–Jan 13)',
+                  collapsed: false,
+                  items: [
+                    { id: uid(), title: 'Private Messaging', detail: 'DM functionality: requirements, API design, mobile UI' }
+                  ]
+                },
+                {
+                  id: 'sp-m-jan-2',
+                  name: 'Sprint 24 (Jan 13–Jan 28)',
+                  collapsed: false,
+                  items: [
+                    { id: uid(), title: 'Private Messaging Dev', detail: 'Backend API + mobile UI implementation' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'feb',
+              name: 'February',
+              collapsed: false,
+              sprints: [
+                {
+                  id: 'sp-m-feb-1',
+                  name: 'Sprint 25 (Jan 29–Feb 10)',
+                  collapsed: false,
+                  items: [
+                    { id: uid(), title: 'MMP Integration', detail: 'Mobile measurement partner SDK + event tracking' },
+                    { id: uid(), title: 'Global Search UX', detail: 'People search design + implementation' }
+                  ]
+                },
+                {
+                  id: 'sp-m-feb-2',
+                  name: 'Sprint 26 (Feb 10–Feb 24)',
+                  collapsed: false,
+                  items: [
+                    { id: uid(), title: 'Global Search Dev', detail: 'Backend + mobile search integration' }
+                  ,
+                    { id: '2jw4spbmf', title: 'Push Notifications: PVs Notification', detail: 'Profile view push notification trigger' },
+                    { id: 'y2r4su5gj', title: 'GA Events – Checkout (5 sp)', detail: 'Google Analytics event tracking for checkout flow' },
+                    { id: 'eslj5dl33', title: 'Deep Linking – MMP', detail: 'Mobile measurement partner deep link integration' },
+                    { id: '4pkq4gwj3', title: 'My School Page (12 sp)', detail: 'Updates to landing page, invite, search, and home page card' },
+                    { id: 'aa5f7aawr', title: 'My School Page – Person Component (3 sp)', detail: 'Person card component for school page' },
+                    { id: 'weak19vfj', title: 'Profile Activity Card Update (3 sp)', detail: 'Update Accounts/U Profile Activity card from menu' },
+                    { id: 'e100cle3j', title: 'Subscription – Manual Renewal for Recently Expired (5 sp)', detail: 'Add manual renewal flow for recently expired subscribers' },
+                    { id: '6f13nqeyi', title: 'High Priority Bugs', detail: 'See bug list' },
+                    { id: 'h076xibuk', title: 'Feeds – Photo Return Behavior (2 sp)', detail: 'Back arrow from album in feed should return user to feed' },
+                    { id: 'wvyax9unk', title: 'Release: Push Notifications, Deep Linking, High Priority Bugs', detail: 'Sprint 26 release items' },
+                    { id: 'ed6a6qui3', title: 'Reg & Auth – Auto Cap Email Field', detail: 'Prevent auto-capitalization on email input field' },
+                    { id: 'xd1os3k1d', title: 'View Profile – See Who Said What (Own Profile Only)', detail: 'Limit see who said what to user\'s own profile' }]
+                }
+              ]
+            },
+            {
+              id: 'mar',
+              name: 'March',
+              collapsed: false,
+              sprints: [
+                {
+                  id: 'sp-m-mar-1',
+                  name: 'Sprint 27 (Feb 24–Mar 10)',
+                  collapsed: false,
+                  items: [
+                    { id: uid(), title: 'My Profile Enhancements', detail: 'Reskin profile + photo upload flow improvements' }
+                  ,
+                    { id: 'mtwcv57lb', title: 'Push Notifications: PVs Notification', detail: 'Continued profile view push notification work' },
+                    { id: 'ge44zxw3t', title: 'GA Events – Registration (3 sp)', detail: 'Google Analytics event tracking for registration flow' },
+                    { id: '3vfibonqh', title: 'Deep Linking – MMP', detail: 'Continued deep link MMP integration' },
+                    { id: 'uj2mzr9d7', title: 'Yearbook as Bottom Navigation Item', detail: 'Add yearbook to bottom nav bar' },
+                    { id: 'hug9jyce1', title: 'YB Viewer Support (link, params, token access)', detail: 'YB Viewer on app – home page card or icon, scoping needed' },
+                    { id: '3bl69px7n', title: 'Subscription – Manual Renewal for Recently Expired (5 sp)', detail: 'Continued manual renewal flow implementation' },
+                    { id: 'udtvk4py3', title: 'High Priority Bugs (see list)', detail: '' },
+                    { id: 'u0hrctjar', title: 'PM – Blur and Drawer Behavior for Free Users', detail: 'Correct blur and drawer UI behavior for free-tier users' },
+                    { id: '5orj4c1lr', title: 'PM – Bottom Nav Hidden in Inbox', detail: 'Bottom navigation bar should not be visible in inbox' },
+                    { id: 't8tkwqi70', title: 'Feed – Cannot Delete Own Post (Three-Dot Menu Blank)', detail: 'Three-dot submenu is blank; user cannot delete own post' }]
+                },
+                {
+                  id: 'sp-m-mar-2',
+                  name: 'Sprint 28 (Mar 10–Mar 24)',
+                  collapsed: false,
+                  items: [
+                    { id: 'ay8nmn8d3', title: 'Push Notifications: Photo Comments & Likes (5 sp)', detail: 'Trigger push notifications for photo comments and likes' },
+                    { id: 'ifjfx12ue', title: 'GA Events – Feeds and Photos', detail: 'Google Analytics tracking for feeds and photo interactions' },
+                    { id: 'oikdl1r6z', title: 'Icon Updates + Lightbox UX Improvements', detail: 'Increase touch areas, new lightbox swipes (easier to swipe)' },
+                    { id: 'uc2ul149m', title: 'Yearbook as Bottom Navigation Item', detail: 'Continued yearbook bottom nav implementation' },
+                    { id: 'ipxkd03bs', title: 'Home Page: Games Discoverability (needs scoping)', detail: 'Card or carousel on home page for games – scope TBD' },
+                    { id: 'j2d12pb0m', title: 'Feed Reactions – UX Polish (3 sp)', detail: 'Remove fly-in animation, increase reaction size, adjust touch timing' },
+                    { id: '4g08qmuj9', title: 'High Priority Bugs (see list)', detail: '' },
+                    { id: 'cv83cfjdj', title: 'Bug: Notification Toggle Resets for New Users', detail: 'Notification toggle resets after navigating back to category' },
+                    { id: 't8juou0ra', title: 'Bug: Toast Notification Duration Too Long', detail: 'Reduce duration of toast notification at top of screen' }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'q2-2026',
+          name: 'Q2 2026',
+          dateRange: 'Apr – Jun 2026',
+          collapsed: false,
+          months: [
+            {
+              id: 'apr',
+              name: 'April',
+              collapsed: false,
+              sprints: [
+                { id: 'sp-m-apr-1', name: 'Sprint 29 (Mar 24–Apr 7)', collapsed: false, items: [
+                  { id: uid(), title: 'In-App Purchase MMP', detail: 'Mobile measurement partner for IAP events' }
+                ,
+                    { id: 'zv8aseopu', title: 'Commenting on Photos (new lightbox)', detail: 'Enable photo commenting within new lightbox UI' },
+                    { id: 'ygzxq6kea', title: 'UAT Observations (see list)', detail: '' },
+                    { id: 'y8b2ryzkg', title: 'High Priority Bugs (see list)', detail: '' },
+                    { id: 'e84jfq6eg', title: 'Bug: Increasing Font Size Breaks UI (Accessibility)', detail: 'Large font/accessibility settings cause layout issues' },
+                    { id: 'zk31zil86', title: 'Bug: Unable to Add Photo via Camera (intermittent)', detail: 'Photos unable to add via camera – errors occur from time to time' },
+                    { id: '6x9o7pz27', title: 'Bug: Reg Email Field Shows Error on Typing Start', detail: 'Email field displays error as user starts typing during registration' }]},
+                { id: 'sp-m-apr-2', name: 'Sprint 30 (Apr 14–Apr 27)', collapsed: false, items: [
+                    { id: 'ts97pnafk', title: 'Notifications: Direct Link to Content from Other', detail: 'Deep link from Other notification type; update the Other label' },
+                    { id: 'i2x2s60or', title: 'Global Search: Add API', detail: 'Backend API integration for global search' },
+                    { id: 'm3yh9zxmw', title: 'UAT Observations (see list)', detail: '' },
+                    { id: '1guet3ljo', title: 'High Priority Bugs (see list)', detail: '' }
+                  ] }
+              ]
+            },
+            {
+              id: 'may',
+              name: 'May',
+              collapsed: false,
+              sprints: [
+                { id: 'sp-m-may-1', name: 'Sprint 31 (Apr 28–May 11)', collapsed: false, items: [
+                    { id: 'pyszvdkzh', title: 'Update Modal – New Version Available (3 sp)', detail: 'In-app modal prompting users to update to latest app version' },
+                    { id: 'teajetlj3', title: 'High Priority Bugs (see list)', detail: '' }
+                  ] },
+                { id: 'sp-m-may-2', name: 'Sprint 32 (May 12–May 25)', collapsed: false, items: [] }
+              ]
+            },
+            {
+              id: 'jun',
+              name: 'June',
+              collapsed: false,
+              sprints: [
+                { id: 'sp-m-jun-1', name: 'Sprint 33 (May 26–Jun 8)', collapsed: false, items: [] },
+                { id: 'sp-m-jun-2', name: 'Sprint 34 (Jun 9–Jun 22)', collapsed: false, items: [] }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'web-platform',
+      name: 'Web Platform (App Team)',
+      type: 'platform',
+      collapsed: false,
+      quarters: [
+        {
+          id: 'q1-2026-web',
+          name: 'Q1 2026',
+          dateRange: 'Jan – Mar 2026',
+          collapsed: false,
+          months: [
+            {
+              id: 'jan-web',
+              name: 'January',
+              collapsed: false,
+              sprints: [
+                {
+                  id: 'sp-w-jan-1',
+                  name: 'Sprint 9 (Jan 5–Jan 13)',
+                  collapsed: false,
+                  items: [
+                    { id: uid(), title: 'Feeds Architecture MVP0', detail: 'Infrastructure, data model, core feed pipeline' }
+                  ]
+                },
+                {
+                  id: 'sp-w-jan-2',
+                  name: 'Sprint 10 (Jan 14–Jan 27)',
+                  collapsed: false,
+                  items: [
+                    { id: uid(), title: 'Navigation Redesign', detail: 'Intent-driven nav: A/B test rollout from Q4 2025 results' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'feb-web',
+              name: 'February',
+              collapsed: false,
+              sprints: [
+                {
+                  id: 'sp-w-feb-1',
+                  name: 'Sprint 11 (Jan 28–Feb 10)',
+                  collapsed: false,
+                  items: [
+                    { id: uid(), title: 'Feeds MVP1', detail: 'Posts, photos, interactions, basic analytics' }
+                  ]
+                },
+                {
+                  id: 'sp-w-feb-2',
+                  name: 'Sprint 12 (Feb 11–Feb 24)',
+                  collapsed: false,
+                  items: [
+                    { id: uid(), title: 'Content Seeding — Decade Personas', detail: 'Nostalgic staff post personas to seed feed by decade' }
+                  ]
+                }
+              ]
+            },
+            {
+              id: 'mar-web',
+              name: 'March',
+              collapsed: false,
+              sprints: [
+                {
+                  id: 'sp-w-mar-1',
+                  name: 'Sprint 13 (Feb 25–Mar 10)',
+                  collapsed: false,
+                  items: [
+                    { id: uid(), title: 'Feeds MVP2 — Carousels & Interstitials', detail: 'IRU carousels, enhanced feed page, notifications' }
+                  ]
+                },
+                {
+                  id: 'sp-w-mar-2',
+                  name: 'Sprint 14 (Mar 11–Mar 24)',
+                  collapsed: false,
+                  items: []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'q2-2026-web',
+          name: 'Q2 2026',
+          dateRange: 'Apr – Jun 2026',
+          collapsed: false,
+          months: [
+            {
+              id: 'apr-web',
+              name: 'April',
+              collapsed: false,
+              sprints: [
+                { id: 'sp-w-apr-1', name: 'Sprint 15 (Mar 25–Apr 7)', collapsed: false, items: [
+                  { id: uid(), title: 'Silver→Gold Conversion Push', detail: 'Profile views + photo upload nudges targeting Silver tier' }
+                ]},
+                { id: 'sp-w-apr-2', name: 'Sprint 16 (Apr 8–Apr 21)', collapsed: false, items: [] }
+              ]
+            },
+            {
+              id: 'may-web',
+              name: 'May',
+              collapsed: false,
+              sprints: [
+                { id: 'sp-w-may-1', name: 'Sprint 17 (Apr 22–May 5)', collapsed: false, items: [] },
+                { id: 'sp-w-may-2', name: 'Sprint 18 (May 6–May 19)', collapsed: false, items: [] }
+              ]
+            },
+            {
+              id: 'jun-web',
+              name: 'June',
+              collapsed: false,
+              sprints: [
+                { id: 'sp-w-jun-1', name: 'Sprint 19 (May 20–Jun 2)', collapsed: false, items: [] },
+                { id: 'sp-w-jun-2', name: 'Sprint 20 (Jun 3–Jun 16)', collapsed: false, items: [] }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'btdt',
+      name: 'BTDT Gamification',
+      type: 'consumer',
+      collapsed: false,
+      quarters: [
+        {
+          id: 'q1-2026-btdt',
+          name: 'Q1 2026',
+          dateRange: 'Jan – Mar 2026',
+          collapsed: false,
+          months: [
+            {
+              id: 'jan-btdt',
+              name: 'January',
+              collapsed: false,
+              sprints: [
+                { id: 'sp-b-jan-1', name: 'Sprint 1', collapsed: false, items: [
+                  { id: uid(), title: 'BTDT Core Loop', detail: 'Daily trivia gameplay engine, scoring, streak logic' }
+                ]},
+                { id: 'sp-b-jan-2', name: 'Sprint 2', collapsed: false, items: [
+                  { id: uid(), title: 'BTDT Retention Infrastructure', detail: 'D1/D7/D30 retention hooks, push trigger setup' }
+                ]}
+              ]
+            },
+            {
+              id: 'feb-btdt',
+              name: 'February',
+              collapsed: false,
+              sprints: [
+                { id: 'sp-b-feb-1', name: 'Sprint 3', collapsed: false, items: [
+                  { id: uid(), title: 'BTDT Monetization Gate', detail: 'CM+ paywall integration, free vs paid gameplay limits' }
+                ]},
+                { id: 'sp-b-feb-2', name: 'Sprint 4', collapsed: false, items: [] }
+              ]
+            },
+            {
+              id: 'mar-btdt',
+              name: 'March',
+              collapsed: false,
+              sprints: [
+                { id: 'sp-b-mar-1', name: 'Sprint 5', collapsed: false, items: [] },
+                { id: 'sp-b-mar-2', name: 'Sprint 6', collapsed: false, items: [] }
+              ]
+            }
+          ]
+        },
+        {
+          id: 'q2-2026-btdt',
+          name: 'Q2 2026',
+          dateRange: 'Apr – Jun 2026',
+          collapsed: false,
+          months: [
+            { id: 'apr-btdt', name: 'April', collapsed: false, sprints: [
+              { id: 'sp-b-apr-1', name: 'Sprint 7', collapsed: false, items: [] },
+              { id: 'sp-b-apr-2', name: 'Sprint 8', collapsed: false, items: [] }
+            ]},
+            { id: 'may-btdt', name: 'May', collapsed: false, sprints: [
+              { id: 'sp-b-may-1', name: 'Sprint 9', collapsed: false, items: [] },
+              { id: 'sp-b-may-2', name: 'Sprint 10', collapsed: false, items: [] }
+            ]},
+            { id: 'jun-btdt', name: 'June', collapsed: false, sprints: [
+              { id: 'sp-b-jun-1', name: 'Sprint 11', collapsed: false, items: [] },
+              { id: 'sp-b-jun-2', name: 'Sprint 12', collapsed: false, items: [] }
+            ]}
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let editMode = false;
+let activeFilter = 'all';
+let dragSrc = null; // { layerId, quarterId, monthId, sprintId, itemId }
+let modalCtx = null; // { mode: 'add'|'edit', layerId, quarterId, monthId, sprintId, itemId? }
+let layerModalCtx = null;
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function uid() {
+  return Math.random().toString(36).substr(2, 9);
+}
+
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 2200);
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(roadmapData));
+  debouncedSyncSave(roadmapData);
+}
+
+function load() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try { roadmapData = JSON.parse(saved); } catch(e) {}
+  }
+}
+
+function getItem(layerId, quarterId, monthId, sprintId, itemId) {
+  const layer = roadmapData.layers.find(l => l.id === layerId);
+  const quarter = layer.quarters.find(q => q.id === quarterId);
+  const month = quarter.months.find(m => m.id === monthId);
+  const sprint = month.sprints.find(s => s.id === sprintId);
+  return sprint.items.find(i => i.id === itemId);
+}
+
+function getSprint(layerId, quarterId, monthId, sprintId) {
+  const layer = roadmapData.layers.find(l => l.id === layerId);
+  const quarter = layer.quarters.find(q => q.id === quarterId);
+  const month = quarter.months.find(m => m.id === monthId);
+  return month.sprints.find(s => s.id === sprintId);
+}
+
+function countItems(layer) {
+  let n = 0;
+  layer.quarters.forEach(q => q.months.forEach(m => m.sprints.forEach(s => n += s.items.length)));
+  return n;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render() {
+  const canvas = document.getElementById('canvas');
+  canvas.innerHTML = '';
+  canvas.className = 'canvas' + (editMode ? ' edit-mode' : '');
+
+  roadmapData.layers.forEach(layer => {
+    canvas.appendChild(renderLayer(layer));
+  });
+
+  // Add layer button
+  const addLayerBtn = document.createElement('button');
+  addLayerBtn.className = 'add-layer-btn btn btn-ghost';
+  addLayerBtn.innerHTML = '+ Add Layer';
+  addLayerBtn.onclick = () => openLayerModal('add');
+  canvas.appendChild(addLayerBtn);
+
+  bindDragEvents();
+}
+
+function renderLayer(layer) {
+  const el = document.createElement('div');
+  el.className = 'layer';
+  el.dataset.layerId = layer.id;
+
+  const total = countItems(layer);
+  const header = document.createElement('div');
+  header.className = 'layer-header';
+  header.innerHTML = `
+    <span class="layer-chevron ${layer.collapsed ? '' : 'open'}">▶</span>
+    <span class="layer-name">${layer.name}</span>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${total} items</span>
+    ${editMode ? `
+      <button class="btn btn-ghost" style="padding:3px 8px;font-size:10px;margin-left:8px" onclick="event.stopPropagation();openLayerModal('edit','${layer.id}')">✎</button>
+      <button class="btn btn-danger" style="padding:3px 8px;font-size:10px" onclick="event.stopPropagation();deleteLayer('${layer.id}')">✕</button>
+    ` : ''}
+  `;
+  header.onclick = () => {
+    layer.collapsed = !layer.collapsed;
+    save();
+    render();
+  };
+
+  const body = document.createElement('div');
+  body.className = 'layer-body';
+
+  if (!layer.collapsed) {
+    layer.quarters.forEach(quarter => {
+      body.appendChild(renderQuarter(layer, quarter));
+    });
+
+    if (editMode) {
+      const addQBtn = document.createElement('button');
+      addQBtn.className = 'btn btn-ghost add-month-btn';
+      addQBtn.style.cssText = 'align-self:flex-start;margin-top:24px;white-space:nowrap';
+      addQBtn.innerHTML = '+ Quarter';
+      addQBtn.onclick = () => addQuarter(layer.id);
+      body.appendChild(addQBtn);
+    }
+  }
+
+  el.appendChild(header);
+  el.appendChild(body);
+  return el;
+}
+
+function renderQuarter(layer, quarter) {
+  const el = document.createElement('div');
+  el.className = 'quarter';
+
+  const header = document.createElement('div');
+  header.className = 'quarter-header';
+  header.innerHTML = `
+    <span class="chevron" style="font-size:10px;color:var(--text3)">${quarter.collapsed ? '▶' : '▼'}</span>
+    <span class="quarter-label">${quarter.name}</span>
+    <span class="quarter-date">${quarter.dateRange || ''}</span>
+    <div class="quarter-line"></div>
+    ${editMode ? `<button class="btn btn-danger" style="padding:2px 8px;font-size:10px" onclick="deleteQuarter('${layer.id}','${quarter.id}')">✕</button>` : ''}
+  `;
+  header.onclick = (e) => {
+    if (e.target.tagName === 'BUTTON') return;
+    quarter.collapsed = !quarter.collapsed;
+    save(); render();
+  };
+
+  const body = document.createElement('div');
+  body.className = 'quarter-body';
+
+  if (!quarter.collapsed) {
+    quarter.months.forEach(month => {
+      body.appendChild(renderMonth(layer, quarter, month));
+    });
+    if (editMode) {
+      const addM = document.createElement('button');
+      addM.className = 'add-month-btn';
+      addM.innerHTML = '+ Month';
+      addM.onclick = () => addMonth(layer.id, quarter.id);
+      body.appendChild(addM);
+    }
+  }
+
+  el.appendChild(header);
+  el.appendChild(body);
+  return el;
+}
+
+function renderMonth(layer, quarter, month) {
+  const el = document.createElement('div');
+  el.className = 'month';
+
+  const itemCount = month.sprints.reduce((n, s) => n + s.items.length, 0);
+
+  const header = document.createElement('div');
+  header.className = 'month-header';
+  header.innerHTML = `
+    <span class="chevron" style="font-size:9px;color:var(--text3)">${month.collapsed ? '▶' : '▼'}</span>
+    <span class="month-name">${month.name}</span>
+    <span class="month-count">${itemCount}</span>
+    ${editMode ? `<button class="btn btn-danger" style="padding:1px 6px;font-size:9px;margin-left:6px" onclick="deleteMonth('${layer.id}','${quarter.id}','${month.id}')">✕</button>` : ''}
+  `;
+  header.onclick = (e) => {
+    if (e.target.tagName === 'BUTTON') return;
+    month.collapsed = !month.collapsed;
+    save(); render();
+  };
+
+  const body = document.createElement('div');
+  body.className = 'month-body';
+
+  if (!month.collapsed) {
+    month.sprints.forEach(sprint => {
+      body.appendChild(renderSprint(layer, quarter, month, sprint));
+    });
+
+    if (editMode) {
+      const addS = document.createElement('button');
+      addS.className = 'add-sprint-btn';
+      addS.innerHTML = '+ Sprint';
+      addS.onclick = () => addSprint(layer.id, quarter.id, month.id);
+      body.appendChild(addS);
+    }
+  }
+
+  el.appendChild(header);
+  el.appendChild(body);
+  return el;
+}
+
+function renderSprint(layer, quarter, month, sprint) {
+  const el = document.createElement('div');
+  el.className = 'sprint';
+
+  const header = document.createElement('div');
+  header.className = 'sprint-header';
+  header.innerHTML = `
+    <span class="chevron" style="font-size:9px;color:var(--text3)">${sprint.collapsed ? '▶' : '▼'}</span>
+    <span class="sprint-name">${sprint.name}</span>
+    <span class="sprint-count">${sprint.items.length}</span>
+    ${editMode ? `<button class="btn btn-danger" style="padding:1px 5px;font-size:9px" onclick="deleteSprint('${layer.id}','${quarter.id}','${month.id}','${sprint.id}')">✕</button>` : ''}
+  `;
+  header.onclick = (e) => {
+    if (e.target.tagName === 'BUTTON') return;
+    sprint.collapsed = !sprint.collapsed;
+    save(); render();
+  };
+
+  const body = document.createElement('div');
+  body.className = 'sprint-body';
+  body.dataset.layerId = layer.id;
+  body.dataset.quarterId = quarter.id;
+  body.dataset.monthId = month.id;
+  body.dataset.sprintId = sprint.id;
+
+  if (!sprint.collapsed) {
+    // Filter items
+    let items = sprint.items;
+    if (activeFilter !== 'all') {
+      items = items.filter(i => i.tags && i.tags.includes(activeFilter));
+    }
+
+    if (items.length === 0) {
+      const hint = document.createElement('div');
+      hint.className = 'empty-hint';
+      hint.textContent = 'drop here';
+      body.appendChild(hint);
+    } else {
+      items.forEach(item => {
+        body.appendChild(renderItem(layer, quarter, month, sprint, item));
+      });
+    }
+
+    // Add item button
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-item-btn';
+    addBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><line x1="5.5" y1="1" x2="5.5" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="5.5" x2="10" y2="5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Add item';
+    addBtn.onclick = () => openItemModal('add', layer.id, quarter.id, month.id, sprint.id);
+    body.appendChild(addBtn);
+  }
+
+  el.appendChild(header);
+  el.appendChild(body);
+  return el;
+}
+
+function renderItem(layer, quarter, month, sprint, item) {
+  const el = document.createElement('div');
+  el.className = 'item';
+  el.draggable = true;
+  el.dataset.itemId = item.id;
+  el.dataset.layerId = layer.id;
+  el.dataset.quarterId = quarter.id;
+  el.dataset.monthId = month.id;
+  el.dataset.sprintId = sprint.id;
+
+  el.innerHTML = `
+    <div class="item-title">${item.title}</div>
+    ${item.detail ? `<div class="item-detail item-detail-rich">${item.detail}</div>` : ''}
+  `;
+
+  // Open modal on click (but not during drag)
+  el.addEventListener('click', () => {
+    openItemModal('edit', layer.id, quarter.id, month.id, sprint.id, item.id);
+  });
+
+  return el;
+}
+
+// ── MONTH RESIZE ─────────────────────────────────────────────────────────────
+function setAllMonthWidths(px) {
+  document.querySelectorAll('.month').forEach(m => m.style.width = px + 'px');
+  const label = document.getElementById('colWidthLabel');
+  if (label) label.textContent = px + 'px';
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────────────────────
+let dropIndicator = null;
+
+function getDropIndicator() {
+  if (!dropIndicator) {
+    dropIndicator = document.createElement('div');
+    dropIndicator.className = 'drop-indicator';
+  }
+  return dropIndicator;
+}
+
+function clearDropIndicator() {
+  if (dropIndicator && dropIndicator.parentNode) {
+    dropIndicator.parentNode.removeChild(dropIndicator);
+  }
+}
+
+function getItemAtPoint(body, clientY) {
+  // Returns { el, insertBefore } — insertBefore=true means insert above el
+  const items = [...body.querySelectorAll('.item:not(.dragging)')];
+  for (const item of items) {
+    const rect = item.getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    if (clientY < mid) return { el: item, insertBefore: true };
+  }
+  return { el: null, insertBefore: false };
+}
+
+function bindDragEvents() {
+  document.querySelectorAll('.item').forEach(el => {
+    el.addEventListener('dragstart', e => {
+      dragSrc = {
+        layerId: el.dataset.layerId,
+        quarterId: el.dataset.quarterId,
+        monthId: el.dataset.monthId,
+        sprintId: el.dataset.sprintId,
+        itemId: el.dataset.itemId
+      };
+      el.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      // Small delay so the dragged ghost looks right
+      setTimeout(() => el.style.opacity = '0.4', 0);
+    });
+
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      el.style.opacity = '';
+      clearDropIndicator();
+      document.querySelectorAll('.sprint-body').forEach(b => b.classList.remove('drag-over'));
+    });
+  });
+
+  document.querySelectorAll('.sprint-body').forEach(body => {
+    body.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      body.classList.add('drag-over');
+
+      const { el, insertBefore } = getItemAtPoint(body, e.clientY);
+      const ind = getDropIndicator();
+      if (el) {
+        if (insertBefore) {
+          body.insertBefore(ind, el);
+        } else {
+          // Insert after el
+          el.after(ind);
+        }
+      } else {
+        // Append at end (before add-item-btn)
+        const addBtn = body.querySelector('.add-item-btn');
+        addBtn ? body.insertBefore(ind, addBtn) : body.appendChild(ind);
+      }
+    });
+
+    body.addEventListener('dragleave', e => {
+      if (!body.contains(e.relatedTarget)) {
+        body.classList.remove('drag-over');
+        clearDropIndicator();
+      }
+    });
+
+    body.addEventListener('drop', e => {
+      e.preventDefault();
+      body.classList.remove('drag-over');
+      clearDropIndicator();
+      if (!dragSrc) return;
+
+      const targetLayerId = body.dataset.layerId;
+      const targetQuarterId = body.dataset.quarterId;
+      const targetMonthId = body.dataset.monthId;
+      const targetSprintId = body.dataset.sprintId;
+
+      // Find source item
+      const srcLayer = roadmapData.layers.find(l => l.id === dragSrc.layerId);
+      const srcQ = srcLayer.quarters.find(q => q.id === dragSrc.quarterId);
+      const srcM = srcQ.months.find(m => m.id === dragSrc.monthId);
+      const srcS = srcM.sprints.find(s => s.id === dragSrc.sprintId);
+      const itemIdx = srcS.items.findIndex(i => i.id === dragSrc.itemId);
+      const [item] = srcS.items.splice(itemIdx, 1);
+
+      // Find target sprint
+      const tgtLayer = roadmapData.layers.find(l => l.id === targetLayerId);
+      const tgtQ = tgtLayer.quarters.find(q => q.id === targetQuarterId);
+      const tgtM = tgtQ.months.find(m => m.id === targetMonthId);
+      const tgtS = tgtM.sprints.find(s => s.id === targetSprintId);
+
+      // Determine insert position from drop point
+      const { el: overEl, insertBefore } = getItemAtPoint(body, e.clientY);
+
+      if (overEl) {
+        const overId = overEl.dataset.itemId;
+        const overIdx = tgtS.items.findIndex(i => i.id === overId);
+        const insertIdx = insertBefore ? overIdx : overIdx + 1;
+        tgtS.items.splice(insertIdx, 0, item);
+      } else {
+        tgtS.items.push(item);
+      }
+
+      dragSrc = null;
+      save();
+      render();
+    });
+  });
+}
+
+function richCmd(cmd) {
+  document.getElementById('itemDetail').focus();
+  document.execCommand(cmd, false, null);
+}
+
+// ── ITEM MODAL ────────────────────────────────────────────────────────────────
+function openItemModal(mode, layerId, quarterId, monthId, sprintId, itemId) {
+  modalCtx = { mode, layerId, quarterId, monthId, sprintId, itemId };
+  document.getElementById('modalTitle').textContent = mode === 'add' ? 'New Item' : 'Edit Item';
+
+  // Show/hide delete button
+  const delBtn = document.getElementById('modalDeleteBtn');
+  delBtn.style.display = mode === 'edit' ? 'inline-flex' : 'none';
+
+  // Reset
+  document.getElementById('itemTitle').value = '';
+  document.getElementById('itemDetail').innerHTML = '';
+  document.querySelectorAll('.tag-checkbox').forEach(cb => cb.checked = false);
+
+  if (mode === 'edit' && itemId) {
+    const item = getItem(layerId, quarterId, monthId, sprintId, itemId);
+    document.getElementById('itemTitle').value = item.title;
+    document.getElementById('itemDetail').innerHTML = item.detail || '';
+    (item.tags || []).forEach(t => {
+      const cb = document.getElementById('tag-' + t);
+      if (cb) cb.checked = true;
+    });
+  }
+
+  document.getElementById('itemModal').classList.add('open');
+  document.getElementById('itemTitle').focus();
+}
+
+function closeModal() {
+  document.getElementById('itemModal').classList.remove('open');
+  modalCtx = null;
+}
+
+function saveItem() {
+  const title = document.getElementById('itemTitle').value.trim();
+  if (!title) return;
+  const detail = document.getElementById('itemDetail').innerHTML.trim();
+  const tags = Array.from(document.querySelectorAll('.tag-checkbox:checked')).map(cb => cb.value);
+
+  const { mode, layerId, quarterId, monthId, sprintId, itemId } = modalCtx;
+
+  if (mode === 'add') {
+    const sprint = getSprint(layerId, quarterId, monthId, sprintId);
+    sprint.items.push({ id: uid(), title, detail, tags });
+  } else {
+    const item = getItem(layerId, quarterId, monthId, sprintId, itemId);
+    item.title = title;
+    item.detail = detail;
+    item.tags = tags;
+  }
+
+  save();
+  closeModal();
+  render();
+  toast(mode === 'add' ? 'Item added' : 'Item updated', 'success');
+}
+
+function deleteItemFromModal() {
+  if (!modalCtx || modalCtx.mode !== 'edit') return;
+  const { layerId, quarterId, monthId, sprintId, itemId } = modalCtx;
+  deleteItem(layerId, quarterId, monthId, sprintId, itemId);
+  closeModal();
+}
+
+function deleteItem(layerId, quarterId, monthId, sprintId, itemId) {
+  const sprint = getSprint(layerId, quarterId, monthId, sprintId);
+  sprint.items = sprint.items.filter(i => i.id !== itemId);
+  save(); render();
+  toast('Item deleted');
+}
+
+// ── LAYER MODAL ───────────────────────────────────────────────────────────────
+function openLayerModal(mode, layerId) {
+  layerModalCtx = { mode, layerId };
+  document.getElementById('layerModalTitle').textContent = mode === 'add' ? 'Add Layer' : 'Edit Layer';
+  document.getElementById('layerName').value = '';
+  document.getElementById('layerType').value = 'consumer';
+
+  if (mode === 'edit') {
+    const layer = roadmapData.layers.find(l => l.id === layerId);
+    document.getElementById('layerName').value = layer.name;
+    document.getElementById('layerType').value = layer.type;
+  }
+
+  document.getElementById('layerModal').classList.add('open');
+}
+
+function closeLayerModal() {
+  document.getElementById('layerModal').classList.remove('open');
+  layerModalCtx = null;
+}
+
+function saveLayer() {
+  const name = document.getElementById('layerName').value.trim();
+  const type = document.getElementById('layerType').value;
+  if (!name) return;
+
+  if (layerModalCtx.mode === 'add') {
+    const id = name.toLowerCase().replace(/\s+/g, '-') + '-' + uid();
+    const newLayer = {
+      id, name, type, collapsed: false,
+      quarters: ['Q1 2026', 'Q2 2026'].map((qname, qi) => ({
+        id: id + '-q' + (qi+1),
+        name: qname,
+        dateRange: qi === 0 ? 'Jan – Mar 2026' : 'Apr – Jun 2026',
+        collapsed: false,
+        months: (qi === 0 ? ['January','February','March'] : ['April','May','June']).map((mname, mi) => ({
+          id: id + '-m' + (qi*3 + mi),
+          name: mname,
+          collapsed: false,
+          sprints: [1,2].map(sn => ({
+            id: id + '-s' + (qi*6 + mi*2 + sn),
+            name: 'Sprint ' + (qi*6 + mi*2 + sn),
+            collapsed: false,
+            items: []
+          }))
+        }))
+      }))
+    };
+    roadmapData.layers.push(newLayer);
+  } else {
+    const layer = roadmapData.layers.find(l => l.id === layerModalCtx.layerId);
+    layer.name = name;
+    layer.type = type;
+  }
+
+  save(); closeLayerModal(); render();
+  toast('Saved', 'success');
+}
+
+function deleteLayer(layerId) {
+  roadmapData.layers = roadmapData.layers.filter(l => l.id !== layerId);
+  save(); render();
+}
+
+// ── STRUCTURE OPS ─────────────────────────────────────────────────────────────
+function addQuarter(layerId) {
+  const name = prompt('Quarter name (e.g. Q3 2026):');
+  if (!name) return;
+  const layer = roadmapData.layers.find(l => l.id === layerId);
+  layer.quarters.push({
+    id: layerId + '-' + uid(),
+    name,
+    dateRange: '',
+    collapsed: false,
+    months: []
+  });
+  save(); render();
+}
+
+function deleteQuarter(layerId, quarterId) {
+  const layer = roadmapData.layers.find(l => l.id === layerId);
+  layer.quarters = layer.quarters.filter(q => q.id !== quarterId);
+  save(); render();
+}
+
+function addMonth(layerId, quarterId) {
+  const name = prompt('Month name:');
+  if (!name) return;
+  const layer = roadmapData.layers.find(l => l.id === layerId);
+  const q = layer.quarters.find(q => q.id === quarterId);
+  const id = layerId + '-' + uid();
+  q.months.push({ id, name, collapsed: false, sprints: [] });
+  save(); render();
+}
+
+function deleteMonth(layerId, quarterId, monthId) {
+  const layer = roadmapData.layers.find(l => l.id === layerId);
+  const q = layer.quarters.find(q => q.id === quarterId);
+  q.months = q.months.filter(m => m.id !== monthId);
+  save(); render();
+}
+
+function addSprint(layerId, quarterId, monthId) {
+  const name = prompt('Sprint name:');
+  if (!name) return;
+  const layer = roadmapData.layers.find(l => l.id === layerId);
+  const q = layer.quarters.find(q => q.id === quarterId);
+  const m = q.months.find(m => m.id === monthId);
+  m.sprints.push({ id: layerId + '-' + uid(), name, collapsed: false, items: [] });
+  save(); render();
+}
+
+function deleteSprint(layerId, quarterId, monthId, sprintId) {
+  const layer = roadmapData.layers.find(l => l.id === layerId);
+  const q = layer.quarters.find(q => q.id === quarterId);
+  const m = q.months.find(m => m.id === monthId);
+  m.sprints = m.sprints.filter(s => s.id !== sprintId);
+  save(); render();
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+function filterTag(tag, btn) {
+  activeFilter = tag;
+  document.querySelectorAll('.tag-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+// ── EDIT MODE ─────────────────────────────────────────────────────────────────
+function toggleEditMode() {
+  editMode = !editMode;
+  const btn = document.getElementById('editBtn');
+  btn.textContent = editMode ? '✓ Done Editing' : '✎ Edit Mode';
+  btn.className = 'btn ' + (editMode ? 'btn-edit-active' : 'btn-ghost btn-edit-active');
+  render();
+}
+
+// ── COLLAPSE / EXPAND ─────────────────────────────────────────────────────────
+function collapseAll() {
+  roadmapData.layers.forEach(l => {
+    l.collapsed = true;
+    l.quarters?.forEach(q => {
+      q.collapsed = true;
+      q.months?.forEach(m => {
+        m.collapsed = true;
+        m.sprints?.forEach(s => s.collapsed = true);
+      });
+    });
+  });
+  save(); render();
+}
+
+function expandAll() {
+  roadmapData.layers.forEach(l => {
+    l.collapsed = false;
+    l.quarters?.forEach(q => {
+      q.collapsed = false;
+      q.months?.forEach(m => {
+        m.collapsed = false;
+        m.sprints?.forEach(s => s.collapsed = false);
+      });
+    });
+  });
+  save(); render();
+}
+
+// ── IMPORT / EXPORT ───────────────────────────────────────────────────────────
+function buildCSV() {
+  const rows = [['Layer', 'Type', 'Quarter', 'Month', 'Sprint', 'Title', 'Detail', 'Tags']];
+  roadmapData.layers.forEach(layer => {
+    layer.quarters.forEach(quarter => {
+      quarter.months.forEach(month => {
+        month.sprints.forEach(sprint => {
+          if (sprint.items.length === 0) {
+            rows.push([layer.name, layer.type, quarter.name, month.name, sprint.name, '', '', '']);
+          } else {
+            sprint.items.forEach(item => {
+              rows.push([
+                layer.name, layer.type, quarter.name, month.name, sprint.name,
+                item.title, item.detail || '', (item.tags || []).join('; ')
+              ]);
+            });
+          }
+        });
+      });
+    });
+  });
+  return rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+}
+
+function exportCSV() {
+  const csv = buildCSV();
+  document.getElementById('csvOutput').value = csv;
+  document.getElementById('csvModal').classList.add('open');
+}
+
+function copyCSV() {
+  const ta = document.getElementById('csvOutput');
+  ta.select();
+  document.execCommand('copy');
+  toast('Copied to clipboard', 'success');
+}
+
+function downloadCSV() {
+  const csv = buildCSV();
+  try {
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cm_roadmap_' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    toast('Downloaded', 'success');
+  } catch(e) {
+    toast('Use Copy instead');
+  }
+}
+
+function importFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const content = ev.target.result;
+    if (file.name.endsWith('.csv')) {
+      importCSV(content);
+    } else {
+      importJSON_content(content);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function importJSON_content(content) {
+  try {
+    roadmapData = JSON.parse(content);
+    save(); render();
+    toast('Imported successfully', 'success');
+  } catch(err) {
+    toast('Invalid JSON file');
+  }
+}
+
+function importCSV(content) {
+  try {
+    const lines = content.trim().split('\n');
+    // Skip header row
+    const dataLines = lines.slice(1);
+
+    // Parse CSV rows (handle quoted fields)
+    function parseRow(line) {
+      const result = [];
+      let cur = '', inQuote = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuote && line[i+1] === '"') { cur += '"'; i++; }
+          else inQuote = !inQuote;
+        } else if (ch === ',' && !inQuote) {
+          result.push(cur); cur = '';
+        } else {
+          cur += ch;
+        }
+      }
+      result.push(cur);
+      return result;
+    }
+
+    // Build new roadmap from CSV rows
+    // Columns: Layer, Type, Quarter, Month, Sprint, Title, Detail, Tags
+    const newData = { layers: [] };
+
+    dataLines.forEach(line => {
+      if (!line.trim()) return;
+      const [layerName, layerType, quarterName, monthName, sprintName, title, detail, tagsStr] = parseRow(line);
+      if (!layerName) return;
+
+      // Find or create layer
+      let layer = newData.layers.find(l => l.name === layerName);
+      if (!layer) {
+        layer = { id: uid(), name: layerName, type: layerType || 'consumer', collapsed: false, quarters: [] };
+        newData.layers.push(layer);
+      }
+
+      // Find or create quarter
+      let quarter = layer.quarters.find(q => q.name === quarterName);
+      if (!quarter) {
+        quarter = { id: uid(), name: quarterName, dateRange: '', collapsed: false, months: [] };
+        layer.quarters.push(quarter);
+      }
+
+      // Find or create month
+      let month = quarter.months.find(m => m.name === monthName);
+      if (!month) {
+        month = { id: uid(), name: monthName, collapsed: false, sprints: [] };
+        quarter.months.push(month);
+      }
+
+      // Find or create sprint
+      let sprint = month.sprints.find(s => s.name === sprintName);
+      if (!sprint) {
+        sprint = { id: uid(), name: sprintName, collapsed: false, items: [] };
+        month.sprints.push(sprint);
+      }
+
+      // Add item if title exists
+      if (title && title.trim()) {
+        const tags = tagsStr ? tagsStr.split(';').map(t => t.trim()).filter(Boolean) : [];
+        sprint.items.push({ id: uid(), title: title.trim(), detail: detail || '', tags });
+      }
+    });
+
+    roadmapData = newData;
+    save(); render();
+    toast('CSV imported successfully', 'success');
+  } catch(err) {
+    toast('Error parsing CSV: ' + err.message);
+  }
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeModal();
+    closeLayerModal();
+  }
+  if ((e.key === 'Enter') && document.getElementById('itemModal').classList.contains('open')) {
+    const active = document.activeElement;
+    const isEditor = active.tagName === 'TEXTAREA' || active.id === 'itemDetail' || active.isContentEditable;
+    if (!isEditor) saveItem();
+  }
+});
+
+document.getElementById('itemModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('itemModal')) closeModal();
+});
+document.getElementById('layerModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('layerModal')) closeLayerModal();
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+loadSettings();
+load();
+render();
+
+if (settings.supabaseUrl && settings.supabaseKey) {
+  syncLoad();
+  startPolling();
+} else {
+  setSyncStatus('idle', 'Local only');
+}
+
+document.getElementById('settingsModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('settingsModal')) closeSettings();
+});
+</script>
+</body>
+</html>
